@@ -1,6 +1,6 @@
 import {DomainI, DomainModel} from "../core/domainInterface";
 import {BFastConfig} from "../conf";
-import {Query} from 'parse';
+import {Query} from 'parse/node';
 import {QueryController} from "./QueryController";
 
 const axios = require('axios');

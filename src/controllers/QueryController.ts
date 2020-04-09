@@ -1,4 +1,4 @@
-import {Query} from 'parse'
+import {Query} from 'parse/node'
 
 export class QueryController extends Query {
 

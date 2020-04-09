@@ -1,4 +1,4 @@
-import {User} from 'parse';
+import {User} from 'parse/node';
 
 export class AuthController extends User {
 }

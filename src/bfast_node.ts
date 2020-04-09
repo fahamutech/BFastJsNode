@@ -5,7 +5,7 @@ import {StorageController} from "./controllers/StorageController";
 import {DomainI} from "./core/domainInterface";
 import {FunctionAdapter} from "./core/functionInterface";
 import {StorageAdapter} from "./core/storageAdapter";
-import * as _parse from 'parse';
+import * as _parse from 'parse/node';
 import {AuthController} from "./controllers/AuthController";
 
 /**

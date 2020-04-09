@@ -1,7 +1,8 @@
 import {StorageAdapter} from "../core/storageAdapter";
+import {File} from 'parse/node';
 
 export class StorageController implements StorageAdapter {
-    constructor(private file: Parse.File) {
+    constructor(private file: File) {
     }
 
     getData(): Promise<string> {
@@ -12,7 +13,7 @@ export class StorageController implements StorageAdapter {
         return this.file.name()
     }
 
-    save(options?: Parse.SuccessFailureOptions): Promise<Parse.File> {
+    save(options?: Parse.SuccessFailureOptions): Promise<File> {
         return this.file.save(options);
     }
 
