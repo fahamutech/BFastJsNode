@@ -4,6 +4,9 @@ export class BFastConfig {
     projectId: any;
     cloudDatabaseUrl: any;
     token: any;
+    appPassword: string | null | undefined;
+    autoDevMode: boolean = true;
+    private static devEnv: boolean = false;
 
     private constructor() {
     }
@@ -11,6 +14,7 @@ export class BFastConfig {
     private static instance: BFastConfig;
 
     static getInstance(): BFastConfig {
+        this.devEnv = (process && process.env && process.env.DEV_ENV === 'true');
         if (!BFastConfig.instance) {
             BFastConfig.instance = new BFastConfig();
         }
@@ -21,11 +25,28 @@ export class BFastConfig {
     getHeaders(): { [key: string]: any } {
         return {
             'Content-Type': 'application/json',
-            'X-Parse-Application-Id': this.applicationId
+            'X-Parse-Application-Id': (this.autoDevMode && BFastConfig.devEnv) ? process.env.APPLICATION_ID : this.applicationId
         }
     };
 
+    getApplicationId(): string {
+        if (this.autoDevMode && BFastConfig.devEnv) {
+            return process.env.APPLICATION_ID ? process.env.APPLICATION_ID : '';
+        }
+        return this.applicationId;
+    }
+
+    getAppPassword() {
+        if (this.autoDevMode && BFastConfig.devEnv) {
+            return process.env.MASTER_KEY ? process.env.MASTER_KEY : undefined;
+        }
+        return this.appPassword;
+    }
+
     getCloudFunctionsUrl(path: string) {
+        if (this.autoDevMode && BFastConfig.devEnv) {
+            return `http://localhost:${process.env.DEV_PORT}`
+        }
         if (this.cloudFunctionsUrl && this.cloudFunctionsUrl.startsWith('http')) {
             return this.cloudFunctionsUrl;
         }
@@ -33,6 +54,9 @@ export class BFastConfig {
     };
 
     getCloudDatabaseUrl() {
+        if (this.autoDevMode && BFastConfig.devEnv) {
+            return `http://localhost:${process.env.DEV_PORT}/_api`
+        }
         if (this.cloudDatabaseUrl && this.cloudDatabaseUrl.startsWith('http')) {
             return this.cloudDatabaseUrl;
         }

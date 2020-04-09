@@ -24,6 +24,8 @@ export const BFast = {
         cloudFunctionsUrl?: string,
         applicationId: string,
         projectId: string,
+        autoDevMode?: boolean,
+        appPassword?: string,
         token?: string,
     }) {
         BFastConfig.getInstance().cloudDatabaseUrl = options.cloudDatabaseUrl ? options.cloudDatabaseUrl : '';
@@ -31,8 +33,12 @@ export const BFast = {
         BFastConfig.getInstance().cloudFunctionsUrl = options.cloudFunctionsUrl ? options.cloudFunctionsUrl : '';
         BFastConfig.getInstance().applicationId = options.applicationId;
         BFastConfig.getInstance().projectId = options.projectId;
+        BFastConfig.getInstance().autoDevMode = options.autoDevMode ? options.autoDevMode : true;
+        BFastConfig.getInstance().appPassword = options.appPassword ? options.appPassword : undefined;
 
-        _parse.initialize(BFastConfig.getInstance().applicationId);
+        _parse.initialize(BFastConfig.getInstance().getApplicationId());
+        // @ts-ignore
+        _parse.masterKey = BFastConfig.getInstance().getAppPassword();
         // @ts-ignore
         _parse.serverURL = BFastConfig.getInstance().getCloudDatabaseUrl();
     },
