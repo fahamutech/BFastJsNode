@@ -33,7 +33,7 @@ export const BFast = {
         BFastConfig.getInstance().cloudFunctionsUrl = options.cloudFunctionsUrl ? options.cloudFunctionsUrl : '';
         BFastConfig.getInstance().applicationId = options.applicationId;
         BFastConfig.getInstance().projectId = options.projectId;
-        BFastConfig.getInstance().autoDevMode = options.autoDevMode ? options.autoDevMode : true;
+        BFastConfig.getInstance().autoDevMode = options.autoDevMode === undefined ? true : options.autoDevMode;
         BFastConfig.getInstance().appPassword = options.appPassword ? options.appPassword : undefined;
 
         _parse.initialize(BFastConfig.getInstance().getApplicationId());

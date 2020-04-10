@@ -5,7 +5,7 @@ export class BFastConfig {
     cloudDatabaseUrl: any;
     token: any;
     appPassword: string | null | undefined;
-    autoDevMode: boolean = true;
+    autoDevMode: boolean | undefined;
     private static devEnv: boolean = false;
 
     private constructor() {
@@ -14,7 +14,7 @@ export class BFastConfig {
     private static instance: BFastConfig;
 
     static getInstance(): BFastConfig {
-        this.devEnv = (process && process.env && process.env.DEV_ENV === 'true');
+        this.devEnv = (process.env.DEV_ENV === 'true');
         if (!BFastConfig.instance) {
             BFastConfig.instance = new BFastConfig();
         }
@@ -25,7 +25,8 @@ export class BFastConfig {
     getHeaders(): { [key: string]: any } {
         return {
             'Content-Type': 'application/json',
-            'X-Parse-Application-Id': (this.autoDevMode && BFastConfig.devEnv) ? process.env.APPLICATION_ID : this.applicationId
+            'X-Parse-Application-Id': (this.autoDevMode && BFastConfig.devEnv) ?
+                process.env.APPLICATION_ID : this.applicationId
         }
     };
 
@@ -45,10 +46,10 @@ export class BFastConfig {
 
     getCloudFunctionsUrl(path: string) {
         if (this.autoDevMode && BFastConfig.devEnv) {
-            return `http://localhost:${process.env.DEV_PORT}`
+            return `http://localhost:${process.env.DEV_PORT}${path}`
         }
         if (this.cloudFunctionsUrl && this.cloudFunctionsUrl.startsWith('http')) {
-            return this.cloudFunctionsUrl;
+            return `${this.cloudFunctionsUrl}${path}`;
         }
         return `https://${this.projectId}-faas.bfast.fahamutech.com${path}`
     };
