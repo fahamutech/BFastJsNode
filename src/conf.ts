@@ -45,6 +45,9 @@ export class BFastConfig {
     }
 
     getCloudFunctionsUrl(path: string) {
+        if (path.startsWith('http')) {
+            return path;
+        }
         if (this.autoDevMode && BFastConfig.devEnv) {
             return `http://localhost:${process.env.DEV_PORT}${path}`
         }
