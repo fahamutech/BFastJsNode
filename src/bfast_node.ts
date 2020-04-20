@@ -74,6 +74,14 @@ export const BFast = {
         request: function (path: string): FunctionAdapter {
             return new FunctionController(path);
         },
+        onHttpRequest: function (path: string,
+                                 handler: ((request: any, response: any, next?: any) => any)[]
+                                     | ((request: any, response: any, next?: any) => any)) {
+            return {
+                path: path,
+                onRequest: handler
+            }
+        }
 
     },
 
