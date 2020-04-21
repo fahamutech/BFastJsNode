@@ -81,6 +81,13 @@ export const BFast = {
                 path: path,
                 onRequest: handler
             }
+        },
+        onEvent: function (eventName: string,
+                           handler: (data: { auth: any, payload: any, socket: any }) => any) {
+            return {
+                name: eventName,
+                onEvent: handler
+            }
         }
 
     },

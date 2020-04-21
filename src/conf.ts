@@ -14,7 +14,7 @@ export class BFastConfig {
     private static instance: BFastConfig;
 
     static getInstance(): BFastConfig {
-        this.devEnv = (process.env.DEV_ENV === 'true');
+        this.devEnv = (process.env.IS_BFAST === 'true');
         if (!BFastConfig.instance) {
             BFastConfig.instance = new BFastConfig();
         }
