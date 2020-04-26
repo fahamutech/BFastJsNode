@@ -22,6 +22,8 @@ export class TransactionController implements TransactionAdapter {
             const response = await axios.post(`${BFastConfig.getInstance().getCloudDatabaseUrl()}/batch`, {
                 requests: this.transactionRequests,
                 transaction: true,
+            }, {
+                headers: BFastConfig.getInstance().getHeaders()
             });
             this.transactionRequests.splice(0);
             return response.data;
