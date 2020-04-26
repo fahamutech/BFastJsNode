@@ -14,7 +14,7 @@ export class BFastConfig {
     private static instance: BFastConfig;
 
     static getInstance(): BFastConfig {
-        this.devEnv = (process.env.IS_BFAST === 'true');
+        this.devEnv = (process.env.IS_LOCAL_BFAST === 'true');
         if (!BFastConfig.instance) {
             BFastConfig.instance = new BFastConfig();
         }
@@ -26,15 +26,15 @@ export class BFastConfig {
         return {
             'Content-Type': 'application/json',
             'X-Parse-Application-Id': (this.autoDevMode && BFastConfig.devEnv) ?
-                process.env.APPLICATION_ID : this.applicationId
-        }
+                process.env.APPLICATION_ID : this.applicationId ? this.applicationId : process.env.APPLICATION_ID
+        };
     };
 
     getApplicationId(): string {
         if (this.autoDevMode && BFastConfig.devEnv) {
             return process.env.APPLICATION_ID ? process.env.APPLICATION_ID : '';
         }
-        return this.applicationId;
+        return this.applicationId ? this.applicationId : process.env.APPLICATION_ID;
     }
 
     getAppPassword() {
@@ -49,21 +49,21 @@ export class BFastConfig {
             return path;
         }
         if (this.autoDevMode && BFastConfig.devEnv) {
-            return `http://localhost:${process.env.DEV_PORT}${path}`
+            return `http://localhost:${process.env.DEV_PORT}${path}`;
         }
         if (this.cloudFunctionsUrl && this.cloudFunctionsUrl.startsWith('http')) {
             return `${this.cloudFunctionsUrl}${path}`;
         }
-        return `https://${this.projectId}-faas.bfast.fahamutech.com${path}`
+        return `https://${this.projectId ? this.projectId : process.env.PROJECT_ID}-faas.bfast.fahamutech.com${path}`;
     };
 
     getCloudDatabaseUrl() {
         if (this.autoDevMode && BFastConfig.devEnv) {
-            return `http://localhost:${process.env.DEV_PORT}/_api`
+            return `http://localhost:${process.env.DEV_PORT}/_api`;
         }
         if (this.cloudDatabaseUrl && this.cloudDatabaseUrl.startsWith('http')) {
             return this.cloudDatabaseUrl;
         }
-        return `https://${this.projectId}-daas.bfast.fahamutech.com`;
+        return `https://${this.projectId ? this.projectId : process.env.PROJECT_ID}-daas.bfast.fahamutech.com`;
     };
 }

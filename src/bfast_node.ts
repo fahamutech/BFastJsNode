@@ -1,16 +1,20 @@
-import {BFastConfig} from "./conf";
-import {DomainController} from "./controllers/domainController";
-import {FunctionController} from "./controllers/functionController";
-import {StorageController} from "./controllers/StorageController";
-import {DomainI} from "./core/domainInterface";
-import {FunctionAdapter} from "./core/functionInterface";
-import {StorageAdapter} from "./core/storageAdapter";
+import {BFastConfig} from './conf';
+import {DomainController} from './controllers/domainController';
+import {FunctionController} from './controllers/functionController';
+import {StorageController} from './controllers/StorageController';
+import {DomainI} from './core/domainInterface';
+import {FunctionAdapter} from './core/functionInterface';
+import {StorageAdapter} from './core/storageAdapter';
 import * as _parse from 'parse/node';
-import {AuthController} from "./controllers/AuthController";
+import {AuthController} from './controllers/AuthController';
+import {SocketController} from "./controllers/SocketController";
+import {TransactionController} from "./controllers/TransactionController";
+import {TransactionAdapter} from "./core/TransactionAdapter";
+import {RealTimeAdapter} from "./core/RealTimeAdapter";
 
 /**
  * Created and maintained by Fahamu Tech Ltd Company
- * @maintained Joshua Mshana ( mama27j@gmail.com )
+ * @maintained Fahamu Tech ( fahamutechdevelopers@gmail.com )
  */
 
 export const BFast = {
@@ -41,6 +45,7 @@ export const BFast = {
         _parse.masterKey = BFastConfig.getInstance().getAppPassword();
         // @ts-ignore
         _parse.serverURL = BFastConfig.getInstance().getCloudDatabaseUrl();
+        _parse.CoreManager.set('REQUEST_BATCH_SIZE', 1000000);
     },
 
     database: {
@@ -48,22 +53,26 @@ export const BFast = {
          * it export api for domain
          * @param name {string} domain name
          */
-        domain: function (name: string): DomainI {
+        domain(name: string): DomainI {
             return new DomainController(name, _parse);
         },
 
         /**
          * same as #domain
          */
-        collection: function (collectionName: string): DomainI {
+        collection(collectionName: string): DomainI {
             return this.domain(collectionName);
         },
         /**
          * same as #domain
          */
-        table: function (tableName: string): DomainI {
+        table(tableName: string): DomainI {
             return this.domain(tableName);
         },
+
+        transaction(): TransactionAdapter {
+            return new TransactionController();
+        }
     },
 
     functions: {
@@ -71,31 +80,35 @@ export const BFast = {
          * exec a cloud function
          * @param path {string} function name
          */
-        request: function (path: string): FunctionAdapter {
+        request(path: string): FunctionAdapter {
             return new FunctionController(path);
         },
-        onHttpRequest: function (path: string,
-                                 handler: ((request: any, response: any, next?: any) => any)[]
-                                     | ((request: any, response: any, next?: any) => any)) {
+        onHttpRequest(path: string,
+                      handler: ((request: any, response: any, next?: any) => any)[]
+                          | ((request: any, response: any, next?: any) => any)) {
             return {
                 path: path,
                 onRequest: handler
-            }
+            };
         },
-        onEvent: function (eventName: string,
-                           handler: (data: { auth: any, payload: any, socket: any }) => any) {
+        onEvent(eventName: string,
+                handler: (data: { auth: any, payload: any, socket: any }) => any) {
             return {
                 name: eventName,
                 onEvent: handler
-            }
+            };
+        },
+        event(eventName: string, onConnect?: Function, onDisconnect?: Function): RealTimeAdapter {
+            return new SocketController(eventName, onConnect, onDisconnect);
         }
 
     },
 
+    // todo: must be implement and not extend parse;
     auth: AuthController,
 
     storage: {
-        getInstance: function (options: {
+        getInstance(options: {
             fileName: string,
             data: number[] | { base64: string } | { size: number; type: string; } | { uri: string },
             fileType?: string

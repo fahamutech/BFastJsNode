@@ -1,5 +1,5 @@
 
-var assert = require('assert');
+const assert = require('assert');
 // var BFast = require('../src/index');
 
 describe('Domain', function(){

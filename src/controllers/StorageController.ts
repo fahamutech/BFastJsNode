@@ -1,8 +1,7 @@
 import {StorageAdapter} from "../core/storageAdapter";
-import {File} from 'parse/node';
 
 export class StorageController implements StorageAdapter {
-    constructor(private file: File) {
+    constructor(private file: Parse.File) {
     }
 
     getData(): Promise<string> {
@@ -13,7 +12,7 @@ export class StorageController implements StorageAdapter {
         return this.file.name()
     }
 
-    save(options?: Parse.SuccessFailureOptions): Promise<File> {
+    save(options?: Parse.SuccessFailureOptions): Promise<Parse.File> {
         return this.file.save(options);
     }
 
@@ -23,6 +22,42 @@ export class StorageController implements StorageAdapter {
 
     url(options?: { forceSecure: boolean }): string {
         return this.file.url(options);
+    }
+
+    addMetadata(key: string, value: any): void {
+        return this.file.addMetadata(key, value);
+    }
+
+    addTag(key: string, value: any): void {
+        return this.file.addTag(key, value);
+    }
+
+    cancel(): void {
+        this.file.cancel();
+    }
+
+    destroy(): Promise<StorageAdapter> {
+        return this.file.destroy();
+    }
+
+    equals(other: StorageController): boolean {
+        return this.file.equals(other);
+    }
+
+    metadata(): Record<string, any> {
+        return this.file.metadata();
+    }
+
+    setMetadata(metadata: Record<string, any>): void {
+        this.file.setMetadata(metadata);
+    }
+
+    setTags(tags: Record<string, any>): void {
+        this.file.setTags(tags);
+    }
+
+    tags(): Record<string, any> {
+        return this.file.tags();
     }
 
 }
