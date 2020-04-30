@@ -3,7 +3,7 @@ import {DomainController} from './controllers/domainController';
 import {FunctionController} from './controllers/functionController';
 import {StorageController} from './controllers/StorageController';
 import {DomainI} from './core/domainInterface';
-import {FunctionAdapter} from './core/functionInterface';
+import {FunctionAdapter} from './core/FunctionAdapter';
 import {StorageAdapter} from './core/storageAdapter';
 import * as _parse from 'parse/node';
 import {AuthController} from './controllers/AuthController';
@@ -11,6 +11,8 @@ import {SocketController} from "./controllers/SocketController";
 import {TransactionController} from "./controllers/TransactionController";
 import {TransactionAdapter} from "./core/TransactionAdapter";
 import {RealTimeAdapter} from "./core/RealTimeAdapter";
+import {MongoController} from "./controllers/MongoController";
+import {MongoAdapter} from "./core/MongoAdapter";
 
 /**
  * Created and maintained by Fahamu Tech Ltd Company
@@ -53,21 +55,21 @@ export const BFast = {
          * it export api for domain
          * @param name {string} domain name
          */
-        domain(name: string): DomainI {
-            return new DomainController(name, _parse);
+        domain<T>(name: string): DomainI<T> {
+            return new DomainController<T>(name, _parse);
         },
 
         /**
          * same as #domain
          */
-        collection(collectionName: string): DomainI {
-            return this.domain(collectionName);
+        collection<T>(collectionName: string): DomainI<T> {
+            return this.domain<T>(collectionName);
         },
         /**
          * same as #domain
          */
-        table(tableName: string): DomainI {
-            return this.domain(tableName);
+        table<T>(tableName: string): DomainI<T> {
+            return this.domain<T>(tableName);
         },
 
         transaction(): TransactionAdapter {
@@ -104,8 +106,17 @@ export const BFast = {
 
     },
 
-    // todo: must be implement and not extend parse;
     auth: AuthController,
+
+    /**
+     * direct access to mongodb and parse_server
+     */
+    directAccess: {
+        parseSdk: _parse,
+        mongo(): MongoAdapter {
+            return MongoController.getInstance();
+        }
+    },
 
     storage: {
         getInstance(options: {
