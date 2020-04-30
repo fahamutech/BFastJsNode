@@ -11,8 +11,6 @@ import {SocketController} from "./controllers/SocketController";
 import {TransactionController} from "./controllers/TransactionController";
 import {TransactionAdapter} from "./core/TransactionAdapter";
 import {RealTimeAdapter} from "./core/RealTimeAdapter";
-import {MongoController} from "./controllers/MongoController";
-import {MongoAdapter} from "./core/MongoAdapter";
 
 /**
  * Created and maintained by Fahamu Tech Ltd Company
@@ -42,9 +40,7 @@ export const BFast = {
         BFastConfig.getInstance().autoDevMode = options.autoDevMode === undefined ? true : options.autoDevMode;
         BFastConfig.getInstance().appPassword = options.appPassword ? options.appPassword : undefined;
 
-        _parse.initialize(BFastConfig.getInstance().getApplicationId());
-        // @ts-ignore
-        _parse.masterKey = BFastConfig.getInstance().getAppPassword();
+        _parse.initialize(BFastConfig.getInstance().getApplicationId(), undefined, BFastConfig.getInstance().getAppPassword());
         // @ts-ignore
         _parse.serverURL = BFastConfig.getInstance().getCloudDatabaseUrl();
         _parse.CoreManager.set('REQUEST_BATCH_SIZE', 1000000);
@@ -113,9 +109,6 @@ export const BFast = {
      */
     directAccess: {
         parseSdk: _parse,
-        mongo(): MongoAdapter {
-            return MongoController.getInstance();
-        }
     },
 
     storage: {

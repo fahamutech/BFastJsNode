@@ -4,7 +4,7 @@ export class BFastConfig {
     projectId: any;
     cloudDatabaseUrl: any;
     token: any;
-    appPassword: string | null | undefined;
+    appPassword: any;
     autoDevMode: boolean | undefined;
     private static devEnv: boolean = false;
 
@@ -39,7 +39,7 @@ export class BFastConfig {
 
     getAppPassword() {
         if (this.autoDevMode && BFastConfig.devEnv) {
-            return process.env.MASTER_KEY ? process.env.MASTER_KEY : undefined;
+            return process.env.MASTER_KEY ? process.env.MASTER_KEY : null;
         }
         return this.appPassword;
     }
