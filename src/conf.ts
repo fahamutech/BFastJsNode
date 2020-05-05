@@ -6,7 +6,7 @@ export class BFastConfig {
     token: any;
     appPassword: any;
     autoDevMode: boolean | undefined;
-    private static devEnv: boolean = false;
+    static devEnv: boolean = false;
 
     private constructor() {
     }
@@ -48,21 +48,21 @@ export class BFastConfig {
         if (path.startsWith('http')) {
             return path;
         }
-        if (this.autoDevMode && BFastConfig.devEnv) {
-            return `http://localhost:${process.env.DEV_PORT}${path}`;
-        }
         if (this.cloudFunctionsUrl && this.cloudFunctionsUrl.startsWith('http')) {
             return `${this.cloudFunctionsUrl}${path}`;
+        }
+        if (this.autoDevMode && BFastConfig.devEnv) {
+            return `http://localhost:${process.env.DEV_PORT}${path}`;
         }
         return `https://${this.projectId ? this.projectId : process.env.PROJECT_ID}-faas.bfast.fahamutech.com${path}`;
     };
 
     getCloudDatabaseUrl() {
-        if (this.autoDevMode && BFastConfig.devEnv) {
-            return `http://localhost:${process.env.DEV_PORT}/_api`;
-        }
         if (this.cloudDatabaseUrl && this.cloudDatabaseUrl.startsWith('http')) {
             return this.cloudDatabaseUrl;
+        }
+        if (this.autoDevMode && BFastConfig.devEnv) {
+            return `http://localhost:${process.env.DEV_PORT}/_api`;
         }
         return `https://${this.projectId ? this.projectId : process.env.PROJECT_ID}-daas.bfast.fahamutech.com`;
     };

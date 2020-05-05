@@ -72,8 +72,7 @@ export class DomainController<T extends DomainModel> implements DomainI<T> {
     async update<T>(objectId: string, model: T): Promise<T> {
         try {
             const response = await axios.put(
-                `${BFastConfig.getInstance().getCloudDatabaseUrl()}/classes/${this.domainName}/${objectId}`,
-                model,
+                `${BFastConfig.getInstance().getCloudDatabaseUrl()}/classes/${this.domainName}/${objectId}`, model,
                 {
                     headers: BFastConfig.getInstance().getHeaders()
                 }

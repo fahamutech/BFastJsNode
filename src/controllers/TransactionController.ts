@@ -7,11 +7,12 @@ import {UpdateOperation} from "../model/UpdateOperation";
 const axios = require('axios').default;
 
 export class TransactionController implements TransactionAdapter {
-
+    private prefix = '';
     private readonly transactionRequests: TransactionModel[];
 
     constructor(private readonly isNormalBatch = false) {
         this.transactionRequests = [];
+        this.prefix = BFastConfig.devEnv ? '/_api' : '';
     }
 
     async commit(options?: { before: () => Promise<void>, after: () => Promise<void> }): Promise<any> {
@@ -42,7 +43,7 @@ export class TransactionController implements TransactionAdapter {
         this.transactionRequests.push({
             body: data,
             method: "POST",
-            path: `/classes/${domainName}`
+            path: `${this.prefix}/classes/${domainName}`
         });
         return this;
     }
@@ -52,7 +53,7 @@ export class TransactionController implements TransactionAdapter {
             return {
                 body: payLoad,
                 method: "POST",
-                path: `/classes/${domainName}`
+                path: `${this.prefix}/classes/${domainName}`
             }
         });
         this.transactionRequests.push(...trans);
@@ -63,7 +64,7 @@ export class TransactionController implements TransactionAdapter {
         this.transactionRequests.push({
             body: payLoad.data ? payLoad.data : {},
             method: "DELETE",
-            path: `/classes/${domainName}/${payLoad.objectId}`
+            path: `${this.prefix}/classes/${domainName}/${payLoad.objectId}`
         });
         return this;
     }
@@ -73,7 +74,7 @@ export class TransactionController implements TransactionAdapter {
             return {
                 body: payLoad.data ? payLoad.data : {},
                 method: "DELETE",
-                path: `/classes/${domainName}/${payLoad.objectId}`
+                path: `${this.prefix}/classes/${domainName}/${payLoad.objectId}`
             }
         });
         this.transactionRequests.push(...trans);
@@ -84,7 +85,7 @@ export class TransactionController implements TransactionAdapter {
         this.transactionRequests.push({
             body: payLoad.data,
             method: "PUT",
-            path: `/classes/${domainName}/${payLoad.objectId}`
+            path: `${this.prefix}/classes/${domainName}/${payLoad.objectId}`
         });
         return this;
     }
@@ -94,7 +95,7 @@ export class TransactionController implements TransactionAdapter {
             return {
                 body: payLoad.data,
                 method: "PUT",
-                path: `/classes/${domainName}/${payLoad.objectId}`
+                path: `${this.prefix}/classes/${domainName}/${payLoad.objectId}`
             }
         });
         this.transactionRequests.push(...trans);
