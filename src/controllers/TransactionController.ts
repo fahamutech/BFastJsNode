@@ -10,7 +10,7 @@ export class TransactionController implements TransactionAdapter {
 
     private readonly transactionRequests: TransactionModel[];
 
-    constructor() {
+    constructor(private readonly isNormalBatch = false) {
         this.transactionRequests = [];
     }
 
@@ -24,7 +24,7 @@ export class TransactionController implements TransactionAdapter {
             }
             const response = await axios.post(`${BFastConfig.getInstance().getCloudDatabaseUrl()}/batch`, {
                 requests: this.transactionRequests,
-                transaction: true,
+                transaction: !this.isNormalBatch,
             }, {
                 headers: BFastConfig.getInstance().getHeaders()
             });

@@ -68,8 +68,8 @@ export const BFast = {
             return this.domain<T>(tableName);
         },
 
-        transaction(): TransactionAdapter {
-            return new TransactionController();
+        transaction(isNormalBatch?: boolean): TransactionAdapter {
+            return new TransactionController(isNormalBatch);
         }
     },
 
